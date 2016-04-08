@@ -1,0 +1,26 @@
+{
+  "name": "mupx",
+  "version": "1.5.2",
+  "description": "Production Quality Meteor Deployments",
+  "dependencies": {
+    "async": "^0.9.0",
+    "cjson": "0.3.x",
+    "colors": "0.6.x",
+    "nodemiral": "^1.0.1",
+    "rimraf": "2.x.x",
+    "underscore": "1.7.0",
+    "uuid": "1.4.x",
+    "archiver": "0.14.x",
+    "update-notifier": "0.4.x",
+    "minimist": "1.1.1"
+  },
+  "bin": {
+    "mupx": "./bin/mup"
+  },
+  "author": "Arunoda Susiripala <arunoda.susiripala@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/arunoda/meteor-up.git"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var cjson = require('cjson');
+var Config = require('../lib/config');
+var ActionsRegistry = require('../lib/actions');
+var helpers = require('../lib/helpers');
+var cliOptions = require('minimist')(process.argv.slice(2));
+var configFileName = cliOptions.config || 'mup.json';
+var settingsFileName = cliOptions.settings || 'settings.json';
+
+require('colors');
+require('../lib/update_notifier.js');
+
+console.log('\nMeteor Up: Production Quality Meteor Deployments'.bold.blue);
+console.log('------------------------------------------------'.bold.blue);
+
+if (configFileName !== 'mup.json' || settingsFileName !== 'settings.json'){
+  console.log('Using custom configuration/settings file'.bold.green);
+}
+console.log('Configuration file : ' + configFileName);
+console.log('Settings file      : ' + settingsFileName);
+console.log('');
+
+var action = cliOptions._[0];
+if(action == 'init') {
+  //special setup for init
+  ActionsRegistry.init();
+} else {
+  var cwd = path.resolve('.');
+  //read config and validate it
+  var config = Config.read(configFileName);
+  var runOptions = {
+    settingsFileName: settingsFileName
+  };
+
+  runActions(config, cwd, runOptions);
+}
+
+function runActions(config, cwd, options) {
+  var actionsRegistry = new ActionsRegistry(config, cwd, options);
+  if(actionsRegistry[action]) {
+    actionsRegistry[action]();
+  } else {
+    if(typeof action !== "undefined") {
+      var errorMessage = 'No Such Action Exists: ' + action;
+      console.error(errorMessage.bold.red);
+    }
+    helpers.printHelp();
+  }
+}
