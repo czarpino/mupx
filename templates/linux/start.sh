@@ -29,9 +29,7 @@ if [ "$USE_LOCAL_MONGO" == "1" ]; then
     --hostname="$HOSTNAME-$APPNAME" \
     --env=MONGO_URL=mongodb://mongodb:27017/$APPNAME \
     --name=$APPNAME \
-    <% if (addHosts && addHosts.length) %>
-    --add-host=[<% for (var hosts = Object.keys(customHosts) || [], i = 0, l = hosts.length; i < l; i ++) { print(hosts[i] + ":" + customHosts[hosts[i]]); print(i < l - 1 ? "," : ""); } %>] \
-    <% } %>
+    <% for (var hosts = Object.keys(customHosts || {}), i = 0, l = hosts.length; i < l; i ++) { %>--add-host=<%= hosts[i] %>:<%= customHosts[hosts[i]] %><%= (i < l - 1 ? " \\\n    " : "") %><% } %> \
     meteorhacks/meteord:base
 else
   docker run \
@@ -42,6 +40,7 @@ else
     --hostname="$HOSTNAME-$APPNAME" \
     --env-file=$ENV_FILE \
     --name=$APPNAME \
+    <% for (var hosts = Object.keys(customHosts || {}), i = 0, l = hosts.length; i < l; i ++) { %>--add-host=<%= hosts[i] %>:<%= customHosts[hosts[i]] %><%= (i < l - 1 ? " \\\n    " : "") %><% } %> \
     meteorhacks/meteord:base
 fi
 
